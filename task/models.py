@@ -17,7 +17,7 @@ class Project(models.Model):
     parent      = models.ForeignKey('self', verbose_name="parent", blank=True, null=True, on_delete=models.CASCADE)
 
     def fully_qualified_name(self):
-        return self.shortname if self.parent is None else self.parent.fully_qualified_name()+'.'+self.shortname
+        return self.shortname if self.parent is None else str(self.parent)+'.'+self.shortname
 
     def __str__(self):
         return self.fully_qualified_name()
@@ -28,7 +28,7 @@ class Tag(models.Model):
     description = models.TextField('description')
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Task(models.Model):
@@ -60,11 +60,17 @@ class Task(models.Model):
     priority    = models.CharField('priorité', blank=True, max_length=50)
     tags        = models.ManyToManyField(Tag, verbose_name="tags", blank=True)
 
+    def __str__(self):
+        return str(self.uuid)
+
 class Annotation(models.Model):
     content     = models.TextField('contenu')
     author      = models.ForeignKey(Profile, verbose_name="auteur", null=True, on_delete=models.SET_NULL)
     date        = models.DateTimeField('date')
     task        = models.ForeignKey(Task, verbose_name="tâche", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.date)
 
 
 class UdaDef(models.Model):
@@ -72,7 +78,7 @@ class UdaDef(models.Model):
     description = models.TextField('description')
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class UdaVal(models.Model):
@@ -81,4 +87,4 @@ class UdaVal(models.Model):
     task        = models.ForeignKey(Task, verbose_name="tâche", on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.task+":"+self.definition
+        return str(self.task)+":"+str(self.definition)
