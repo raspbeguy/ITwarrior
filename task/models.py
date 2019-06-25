@@ -6,6 +6,7 @@ class Project(models.Model):
     name        = models.CharField('Projet', max_length=50)
     shortname   = models.CharField('Identifiant', max_length=50)
     description = models.TextField('Description')
+    parent      = models.ForeignKey('self', verbose_name="Parent", blank=True)
 
 class Tag(models.Model):
     name        = models.CharField('Tag', max_length=50)
