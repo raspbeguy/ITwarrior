@@ -24,7 +24,7 @@ class Task(models.Model):
     uuid        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=False)
     status      = models.CharField('Status', choices=STATUS_CHOICES, default='pending')
     autor       = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, blank=True)
-    depends     = models.ManyToManyField("self",symmetrical=False)
+    depends     = models.ManyToManyField("self",symmetrical=False, blank=True)
     entry       = models.DateTimeField('Date de créaton', blank=False)
     due         = models.DateTimeField('Date d\'échéance', blank=True)
     start       = models.DateTimeField('Date de début', blank=True)
