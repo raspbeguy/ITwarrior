@@ -13,7 +13,8 @@ class Profile(models.Model):
 
 class Project(models.Model):
     name        = models.CharField('projet', max_length=50)
-    shortname   = models.CharField('identifiant', max_length=50)
+    shortname   = models.CharField('sous-dentifiant', max_length=50)
+    fullname    = models.CharField('identifiant', max_length=50)
     description = models.TextField('description')
     parent      = models.ForeignKey('self', verbose_name="parent", blank=True, null=True, on_delete=models.CASCADE)
 
@@ -22,6 +23,10 @@ class Project(models.Model):
 
     def __str__(self):
         return self.fully_qualified_name()
+
+    def save(self, *args, **kwargs):
+        self.fullname = fully_qualified_name()
+        super(Project, self).save(*args, **kwargs)
 
 
 class Tag(models.Model):
