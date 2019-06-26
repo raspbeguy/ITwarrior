@@ -1,10 +1,12 @@
 # ITwarrior
 
+![insert IT Crowd gif here](https://media.giphy.com/media/9PTaAhwri56V2/giphy.gif)
+
 This is a Django frontend for Taskwarrior specifically designed for IT crews.
 
 We developped this as an attempt to enable people to add stuff in our task pipe without having to use a terminal, so they don't have to come and disturb us.
 
-![insert IT Crowd gif here](https://media.giphy.com/media/9PTaAhwri56V2/giphy.gif)
+![insert IT Crowd gif here](https://media.giphy.com/media/M8miKCT0qveKY/giphy.gif)
 
 Later we will implement a ticket list view, by-project permissions and highly cool stuff.
 
