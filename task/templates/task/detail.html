@@ -1,0 +1,7 @@
+<h1>{{ task.project.name }}</h1>
+<h2>{{ task.description }}</h2>
+<ul>
+{% for annotation in task.annotation_set.all %}
+    <li>{{ annotation.content }}</li>
+{% endfor %}
+</ul>

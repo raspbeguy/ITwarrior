@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 import uuid
 
 class Profile(models.Model):
@@ -44,19 +45,19 @@ class Task(models.Model):
     status      = models.CharField('status', choices=STATUS_CHOICES, default='pending', max_length=9)
     autor       = models.ForeignKey(Profile, verbose_name="auteur", null=True, on_delete=models.SET_NULL, blank=True)
     depends     = models.ManyToManyField("self", verbose_name="dépendances", symmetrical=False, blank=True, related_name="task_depends")
-    entry       = models.DateTimeField('date de créaton', blank=False)
-    due         = models.DateTimeField('date d\'échéance', blank=True)
-    start       = models.DateTimeField('date de début', blank=True)
-    end         = models.DateTimeField('date de fin', blank=True)
-    until       = models.DateTimeField('date de fin de récurrence', blank=True)
-    scheduled   = models.DateTimeField('date prévue', blank=True)
-    wait        = models.DateTimeField('date d\'attente', blank=True)
-    modified    = models.DateTimeField('date de modification', blank=False)
+    entry       = models.DateTimeField('date de créaton', blank=False, default=timezone.now)
+    due         = models.DateTimeField('date d\'échéance', blank=True, null=True)
+    start       = models.DateTimeField('date de début', blank=True, null=True)
+    end         = models.DateTimeField('date de fin', blank=True, null=True)
+    until       = models.DateTimeField('date de fin de récurrence', blank=True, null=True)
+    scheduled   = models.DateTimeField('date prévue', blank=True, null=True)
+    wait        = models.DateTimeField('date d\'attente', blank=True, null=True)
+    modified    = models.DateTimeField('date de modification', blank=False, null=True)
     recur       = models.CharField('périodicité', blank=True, max_length=50)
     mask        = models.CharField('masque', blank=True, max_length=256)
-    imask       = models.IntegerField('indice de masque', blank=True)
-    parent      = models.ForeignKey('self', verbose_name="parent", on_delete=models.CASCADE, blank=True, related_name="task_parent")
-    project     = models.ForeignKey(Project, verbose_name="projet", on_delete=models.CASCADE, blank=True)
+    imask       = models.IntegerField('indice de masque', blank=True, null=True)
+    parent      = models.ForeignKey('self', verbose_name="parent", on_delete=models.CASCADE, blank=True, related_name="task_parent", null=True)
+    project     = models.ForeignKey(Project, verbose_name="projet", on_delete=models.CASCADE, blank=True, null=True)
     priority    = models.CharField('priorité', blank=True, max_length=50)
     tags        = models.ManyToManyField(Tag, verbose_name="tags", blank=True)
 
@@ -66,7 +67,7 @@ class Task(models.Model):
 class Annotation(models.Model):
     content     = models.TextField('contenu')
     author      = models.ForeignKey(Profile, verbose_name="auteur", null=True, on_delete=models.SET_NULL)
-    date        = models.DateTimeField('date')
+    date        = models.DateTimeField('date', blank=False, default=timezone.now)
     task        = models.ForeignKey(Task, verbose_name="tâche", on_delete=models.CASCADE)
 
     def __str__(self):
