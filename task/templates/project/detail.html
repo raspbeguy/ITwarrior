@@ -1,0 +1,19 @@
+<h1>{{ project.name }}</h1>
+<h2>{{ project.fullname }}</h2>
+
+{% if project.parent.fullname %}
+<p>Projet parent : <a href="{% url 'project' project.parent.fullname %}">{{ project.parent.name }}</a></p>
+{% endif %}
+
+<h2>{{ project.description }}</h2>
+
+<h3>Tâches de ce projet</h3>
+{% if project.task_set.all %}
+<ul>
+{% for task in project.task_set.all %}
+    <li><a href="{% url 'task' task.uuid %}">{{ task.description }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p><i>Pas de tâches dans ce projet</i></p>
+{% endif %}

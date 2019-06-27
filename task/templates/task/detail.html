@@ -1,7 +1,11 @@
-<h1>{{ task.project.name }}</h1>
+<h1><a href="{% url 'project' task.project.fullname %}">{{ task.project.name }}</a></h1>
 <h2>{{ task.description }}</h2>
+{% if task.annotation_set.all %}
 <ul>
 {% for annotation in task.annotation_set.all %}
     <li>{{ annotation.content }}</li>
 {% endfor %}
 </ul>
+{% else %}
+<p><i>Pas d'annotations</i></p>
+{% endif %}

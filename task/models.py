@@ -14,23 +14,23 @@ class Profile(models.Model):
 class Project(models.Model):
     name        = models.CharField('projet', max_length=50)
     shortname   = models.CharField('sous-dentifiant', max_length=50)
-    fullname    = models.CharField('identifiant', max_length=50, primary=True)
-    description = models.TextField('description', blank=True)
+    fullname    = models.CharField('identifiant', max_length=50, primary_key=True)
+    description = models.TextField('description', blank=True, default="")
     parent      = models.ForeignKey('self', verbose_name="parent", blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.fully_qualified_name()
+        return self.fullname
 
     @classmethod
     def get_or_new(cls, fullname):
         if fullname:
-            try
+            try:
                 return cls.objects.get(fullname=fullname)
             except cls.DoesNotExist:
                 splitted = fullname.rsplit('.', 1)
                 try:
                     shortname = splitted[1]
-                    parent = get_or_new(splitted[0])
+                    parent = cls.get_or_new(splitted[0])
                 except IndexError:
                     shortname = splitted[0]
                     parent = None
