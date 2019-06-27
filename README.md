@@ -10,6 +10,16 @@ We developped this as an attempt to enable people to add stuff in our task pipe 
 
 Later we will implement a ticket list view, by-project permissions and highly cool stuff.
 
+
+## System requirements
+
+With Ubuntu:
+
+```
+sudo apt install python3-venv python3-dev libsasl2-dev libldap2-dev libssl-dev
+```
+
+
 ## Installation
 
 Clone the repo (duh...) :
