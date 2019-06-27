@@ -14,19 +14,31 @@ class Profile(models.Model):
 class Project(models.Model):
     name        = models.CharField('projet', max_length=50)
     shortname   = models.CharField('sous-dentifiant', max_length=50)
-    fullname    = models.CharField('identifiant', max_length=50)
-    description = models.TextField('description')
+    fullname    = models.CharField('identifiant', max_length=50, primary=True)
+    description = models.TextField('description', blank=True)
     parent      = models.ForeignKey('self', verbose_name="parent", blank=True, null=True, on_delete=models.CASCADE)
-
-    def fully_qualified_name(self):
-        return self.shortname if self.parent is None else str(self.parent)+'.'+self.shortname
 
     def __str__(self):
         return self.fully_qualified_name()
 
-    def save(self, *args, **kwargs):
-        self.fullname = fully_qualified_name()
-        super(Project, self).save(*args, **kwargs)
+    @classmethod
+    def get_or_new(cls, fullname):
+        if fullname:
+            try
+                return cls.objects.get(fullname=fullname)
+            except cls.DoesNotExist:
+                splitted = fullname.rsplit('.', 1)
+                try:
+                    shortname = splitted[1]
+                    parent = get_or_new(splitted[0])
+                except IndexError:
+                    shortname = splitted[0]
+                    parent = None
+                p = cls(name=shortname, shortname=shortname, fullname=fullname, parent=parent)
+                p.save()
+                return p
+        else:
+            return None
 
 
 class Tag(models.Model):
@@ -50,7 +62,7 @@ class Task(models.Model):
     status      = models.CharField('status', choices=STATUS_CHOICES, default='pending', max_length=9)
     autor       = models.ForeignKey(Profile, verbose_name="auteur", null=True, on_delete=models.SET_NULL, blank=True)
     depends     = models.ManyToManyField("self", verbose_name="dépendances", symmetrical=False, blank=True, related_name="task_depends")
-    entry       = models.DateTimeField('date de créaton', blank=False, default=timezone.now)
+    entry       = models.DateTimeField('date de création', blank=False, default=timezone.now)
     due         = models.DateTimeField('date d\'échéance', blank=True, null=True)
     start       = models.DateTimeField('date de début', blank=True, null=True)
     end         = models.DateTimeField('date de fin', blank=True, null=True)
