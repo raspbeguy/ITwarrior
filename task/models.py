@@ -16,7 +16,7 @@ class Project(models.Model):
     shortname   = models.CharField('sous-dentifiant', max_length=50)
     fullname    = models.CharField('identifiant', max_length=50, primary_key=True)
     description = models.TextField('description', blank=True, default="")
-    parent      = models.ForeignKey('self', verbose_name="parent", blank=True, null=True, on_delete=models.CASCADE)
+    parent      = models.ForeignKey('self', verbose_name="parent", related_name="children", blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.fullname

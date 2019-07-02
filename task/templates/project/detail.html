@@ -7,8 +7,17 @@
 
 <h2>{{ project.description }}</h2>
 
-<h3>Tâches de ce projet</h3>
+<h3>Tâches directes</h3>
 {% if project.task_set.all %}
+<table>
+<thread>
+<th>Tâche</th>
+<th>Sous-projet</th>
+</thread>
+<tbody>
+</tbody>
+</table>
+
 <ul>
 {% for task in project.task_set.all %}
     <li><a href="{% url 'task' task.uuid %}">{{ task.description }}</a></li>
@@ -16,4 +25,15 @@
 </ul>
 {% else %}
 <p><i>Pas de tâches dans ce projet</i></p>
+{% endif %}
+
+<h3>Sous-projets</h3>
+{% if project.children.all %}
+<ul>
+{% with parent=project %}
+{% include "project/subprojects.html" %}
+{% endwith %}
+</ul>
+{% else %}
+<p><i>Pas de sous-projet</i></p>
 {% endif %}

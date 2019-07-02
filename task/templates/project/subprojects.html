@@ -1,0 +1,10 @@
+{% for child in parent.children.all %}
+<li><a href="{% url 'project' child.fullname %}">{{ child.shortname }}</a></li>
+{% if child.children.all %}
+<ul>
+{% with parent=child %}
+{% include "project/subprojects.html" %}
+{% endwith %}
+</ul>
+{% endif %}
+{% endfor %}
