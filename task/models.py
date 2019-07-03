@@ -21,6 +21,36 @@ class Project(models.Model):
     def __str__(self):
         return self.fullname
 
+    def to_dict(self):
+        result = {}
+        taskset = self.task_set.all()
+        children = self.children.all()
+        if taskset:
+            result['tasks'] = list(taskset)
+        if children:
+            for child in children:
+                childresult = child.to_dict()
+                if childresult:
+                    result['children'] = childresult
+        if result:
+            result['name'] = self.shortname
+        return result
+
+    def to_list(self, prefix=None):
+        result = []
+        taskset = self.task_set.all()
+        children = self.children.all()
+        if prefix:
+            newprefix = prefix + "." + self.shortname
+        else:
+            newprefix = self.shortname
+        if taskset:
+            result = [(newprefix, list(taskset))]
+        if children:
+            for child in children:
+                result += child.to_list(prefix=newprefix)
+        return result
+
     @classmethod
     def get_or_new(cls, fullname):
         if fullname:
